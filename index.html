@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>FLEX 3D | SUNNY AI V44 · Trung tâm điều hành</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef3f8;color:#182d42;font:15px system-ui,Arial}
+header{background:#112c47;color:white;padding:19px 4%}
+main{max-width:1320px;margin:auto;padding:15px}
+.panel{background:white;border:1px solid #d8e2ec;border-radius:15px;padding:17px;margin:12px 0}
+h1{font-size:23px;margin:0 0 8px}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px}p{line-height:1.5}
+.sub{color:#5d7082;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.metric{background:#f2f6fa;padding:13px;border-radius:11px}
+.metric small{display:block;color:#5d7082}
+.metric strong{display:block;font-size:20px;margin-top:6px;word-break:break-word}
+.hero{background:#e7f4ed;border:2px solid #229463;padding:17px;border-radius:14px}
+.hero strong{font-size:29px;color:#096d43}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.nav button{border:1px solid #bccbdb;background:white;padding:10px 13px;border-radius:10px;cursor:pointer}
+.nav button.active{background:#183e62;color:white}
+.badge{padding:4px 8px;border-radius:7px;font-size:12px;font-weight:700;display:inline-block}
+.green{background:#d7f3e3;color:#12633b}.yellow{background:#fff0c8;color:#875900}
+.red{background:#ffe0de;color:#a32422}.gray{background:#e7ebef;color:#536170}
+select,input{padding:9px;border:1px solid #b6c6d6;border-radius:8px;max-width:100%}
+label{font-size:13px;color:#4d6074;display:block;margin:8px 0}
+.scroll{overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:650px}
+th,td{border-bottom:1px solid #e4eaf0;padding:9px;text-align:left}
+th{background:#f0f5fa}
+details{border:1px solid #d8e2ec;border-radius:10px;padding:12px;margin:8px 0}
+summary{cursor:pointer;font-weight:650}
+.warning{background:#fff4d9;border-left:4px solid #d9a333;padding:12px;border-radius:7px}
+.flex{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.flex>*{flex:1;min-width:180px}
+button{cursor:pointer}.action{padding:9px 12px;border:0;border-radius:8px;background:#194e77;color:white}
+.small{font-size:12px}
+.chatlog{height:270px;overflow-y:auto;background:#f4f7fb;border:1px solid #dbe4ee;border-radius:10px;padding:12px}
+.msg{margin:8px 0;padding:10px;border-radius:10px;max-width:92%;white-space:pre-wrap;line-height:1.5}
+.msg.ai{background:#e6f1ff;margin-right:auto}
+.msg.me{background:#e0f3e8;margin-left:auto}
+.chatrow{display:flex;gap:8px}
+.chatrow input{flex:1;min-width:0}
+.chatrow button{min-width:70px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chips button{padding:7px;border:1px solid #b4c9db;border-radius:20px;background:white;font-size:12px}
+body{background:#edf3f9}header{background:linear-gradient(115deg,#0c2d47,#155e73)}
+.panel{box-shadow:0 4px 18px rgba(16,50,75,.055)}.hero{background:linear-gradient(115deg,#e2f8ec,#effbf8)}
+.nav button{transition:background .15s,transform .15s}.nav button:hover{transform:translateY(-1px)}
+.metric{border:1px solid #e2eaf2}
+.ai-launch{position:fixed;right:18px;bottom:18px;z-index:50;background:#125c82;color:white;border:0;border-radius:100px;padding:14px 19px;box-shadow:0 8px 30px #183c5860;font-weight:700}
+#aiAssistant{display:none;position:fixed;right:18px;bottom:76px;z-index:49;width:min(430px,calc(100vw - 26px));max-height:80vh;overflow:auto;box-shadow:0 16px 55px #132c4860;border:2px solid #a4d0e6}
+#aiAssistant.open{display:block}
+.chatlog{height:210px}.chatrow input{width:100%}
+.close-chat{float:right;border:0;background:#edf2f6;border-radius:8px;padding:7px 10px}
+#aiAssistant h2{font-size:16px;padding-right:65px}
+#aiAssistant .chips button{font-size:11px}
+.cardline{padding:12px;border-left:4px solid #2a779f;background:#f0f6fa;border-radius:7px;margin:10px 0}
+.steps{counter-reset:step}.steps li{margin:8px 0;line-height:1.5}
+.multi-tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.media-button{background:#e9f3fa;border:1px solid #a5c7da;border-radius:9px;padding:10px;color:#124a70;font:inherit;cursor:pointer}
+.ai-preview{background:#f4f7fa;padding:9px;border-radius:9px;margin:8px 0}
+.ai-preview img{display:block;max-width:100%;max-height:180px;object-fit:contain;border-radius:7px}
+.ai-preview button{margin:6px;padding:5px}
+:root{--ink:#14263a;--muted:#65758b;--navy:#102b45;--teal:#008c83;--line:#e2e9f0;--paper:#fff;--bg:#f5f7fb;--shadow:0 8px 28px rgba(23,47,75,.055)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.5}
+header{background:#112b45;border-bottom:3px solid #13a99c;min-height:98px;padding:20px max(24px,calc((100vw - 1360px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 6px 25px #122f4818}
+.brand-wrap{display:flex;gap:17px;align-items:center}
+.brand-icon{height:52px;width:52px;display:grid;place-items:center;border:1px solid #ffffff48;border-radius:14px;background:linear-gradient(145deg,#1e6573,#0b3b5d);font-weight:900;font-size:20px;color:white;letter-spacing:-2px}
+.brand-icon span{color:#4ee3cc}
+.brand-copy h1{font-size:24px;letter-spacing:-.8px;line-height:1.2;margin:3px 0}
+.brand-copy h1 span{font-weight:400;color:#9fd5d7}
+.brand-eyebrow{font-size:10px;font-weight:800;letter-spacing:2px;color:#74d8cb}
+.brand-sub{color:#b6c8d9;font-size:12px}
+.head-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.head-version{border:1px solid #ffffff35;padding:8px 12px;border-radius:8px;color:#d6e8f1;font-size:11px;font-weight:750;letter-spacing:1px}
+.head-live{background:#1d4556;padding:8px 12px;border-radius:8px;color:#d2f8ee;font-size:12px}
+.head-live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34dbb5;margin-right:5px}
+main{max-width:1400px;padding:25px 26px 90px}
+.simulation-banner{background:#fff9eb;border:1px solid #f4e2b4;border-left:4px solid #e2a52d;border-radius:11px;color:#775b25;padding:12px 17px;font-size:12px;margin:0 0 20px;line-height:1.6}
+.panel{border:1px solid var(--line);border-radius:16px;padding:24px;margin:16px 0;background:var(--paper);box-shadow:var(--shadow)}
+.profile-panel{padding:25px 27px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.section-heading h2{font-size:21px;letter-spacing:-.5px;margin:3px 0}
+.section-heading p{font-size:12px;color:var(--muted);margin:0}
+.eyebrow{font-size:10px;font-weight:800;color:var(--teal);letter-spacing:1.8px}
+.section-mark{font-size:11px;color:#8191a5;letter-spacing:1.2px;font-weight:700}
+.profile-panel>.flex{background:#f8fafc;padding:14px 17px;border-radius:12px;border:1px solid #e7edf4;margin-bottom:16px}
+.profile-panel label{margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;color:#66778b}
+.profile-panel select,.profile-panel input{display:block;width:100%;margin-top:7px;height:43px;background:white;font-size:14px;font-weight:650;color:#1b344c;border:1px solid #d8e1eb;padding:9px 13px}
+.hero{background:linear-gradient(115deg,#113a50 0%,#165e68 58%,#127c79 100%);border:0;border-radius:15px;padding:24px 28px;color:white;position:relative;overflow:hidden;box-shadow:0 10px 26px #0e5d6c23}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #ffffff22;border-radius:50%;right:-85px;top:-140px;box-shadow:0 0 0 40px #ffffff08,0 0 0 85px #ffffff05;pointer-events:none}
+.hero h2{font-size:20px;font-weight:600;color:#e4f7f6;margin:7px 0 13px}
+.hero-eyebrow{font-size:10px;font-weight:850;letter-spacing:1.6px;color:#90eee2}
+.hero .small{color:#b8dfdf;font-size:11px;letter-spacing:.7px}
+.hero strong{font-size:clamp(31px,4vw,43px);color:white;letter-spacing:-1.2px;display:block;margin:5px 0}
+.hero p{color:#d1eeee;margin:8px 0}.hero .badge{box-shadow:none}
+.nav-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 1px 8px;font-size:11px;font-weight:800;letter-spacing:1.4px;color:#2c4963}
+.nav-heading span+span{font-weight:450;letter-spacing:0;color:#8593a4}
+.page-nav{display:flex;flex-wrap:nowrap;gap:7px;margin:0 0 15px;padding:7px;background:#e9eef5;border:1px solid #dce5ee;border-radius:13px;overflow-x:auto;scrollbar-width:thin}
+.page-nav button{border:0;background:transparent;border-radius:9px;white-space:nowrap;padding:12px 15px;color:#4b6279;font-weight:650;font-size:12px;transition:.15s;flex:0 0 auto}
+.page-nav button.active{background:#fff;color:#0e5e68;box-shadow:0 3px 10px #183b5215}
+.page-nav button:hover{transform:none;background:#fff}
+.period-panel{padding:14px 20px;margin:13px 0}
+.period-panel>b{font-size:12px;color:#334d64}
+.period-panel .nav{margin:10px 0}
+.period-panel .nav button{font-size:12px;padding:8px 15px;border-color:#dce6ee}
+.period-panel .nav button.active{background:#12566a;color:white;border-color:#12566a}
+.period-panel .sub{margin:6px 0 0}
+.content-area>.panel{padding:23px 25px}
+.content-area h2{font-size:19px;letter-spacing:-.4px;color:#18354b}
+.content-area h3{font-size:15px}
+.grid{gap:13px}
+.metric{background:#f8fafc;border:1px solid #e7edf3;border-radius:12px;padding:17px;min-height:95px}
+.metric small{font-size:11px;color:#708198}
+.metric strong{font-size:23px;letter-spacing:-.5px;color:#193a50}
+.badge{border-radius:6px;padding:5px 9px;font-size:11px;letter-spacing:.1px}
+.green{background:#def6ea;color:#086947}.yellow{background:#fff0ce;color:#8b610e}
+.red{background:#fee5e3;color:#a32b2b}.gray{background:#e9eef3;color:#54687a}
+table{font-size:12px;border-collapse:separate;border-spacing:0}
+th{background:#f5f8fb;color:#587087;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+td,th{padding:12px 13px;border-bottom:1px solid #eaf0f5}
+tbody tr:hover{background:#f9fbfd}
+details{border-color:#e3eaf1;border-radius:10px;background:#fff}
+details[open]{background:#fafcfe}summary{color:#27445b}
+.action{background:#0c6c78;border-radius:9px;padding:10px 14px;font-weight:650}
+.cardline{border-left-color:#0c9189;background:#f3faf9}
+.warning{background:#fff8e9;color:#72582d;border-color:#e9ba5d}
+#aiAssistant{border:1px solid #cbdce6;border-radius:17px;padding:19px;box-shadow:0 18px 60px #0b28395c}
+#aiAssistant h2{color:#173c53;font-size:17px}
+.ai-launch{background:#087d7b;box-shadow:0 8px 28px #075e6860;font-size:13px;padding:15px 20px;border:1px solid #ffffff45}
+.ai-launch:hover{background:#075e63}
+.chatlog{background:#f7fafc;border-color:#e2eaf0;border-radius:11px}
+.msg.ai{background:#eaf5f6}.msg.me{background:#e7f4eb}
+.chips button{background:#f7fbfc;border-color:#d5e5eb;color:#2b5866}
+.media-button{background:#eef7f8;border-color:#c7dfe2;color:#155f66}
+.chatrow button{background:#087d7b;color:white;border:0;border-radius:9px}
+.close-chat{background:#edf3f5;color:#365064}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #29a9a9;outline-offset:2px}
+@media(min-width:1100px){.profile-panel>.flex{display:grid;grid-template-columns:2fr 1fr 1fr}.profile-panel>.flex>*{min-width:0}}
+@media(max-width:740px){header{padding:15px 17px;min-height:85px}.brand-icon{width:42px;height:42px}.brand-wrap{gap:11px}.brand-copy h1{font-size:19px}.brand-eyebrow{font-size:8px;letter-spacing:1.3px}.brand-sub{font-size:10px}.head-version{display:none}.head-live{font-size:10px;padding:6px 8px}main{padding:13px 10px 90px}.panel{padding:17px 14px;border-radius:13px}.profile-panel{padding:17px 14px}.section-heading h2{font-size:18px}.section-mark{display:none}.profile-panel>.flex{padding:12px;gap:8px}.profile-panel>.flex>*{min-width:130px}.hero{padding:20px}.hero h2{font-size:18px}.hero strong{font-size:32px}.nav-heading{margin-top:20px}.page-nav{margin-bottom:11px}.page-nav button{padding:11px 13px}.content-area>.panel{padding:17px 14px}.grid{grid-template-columns:repeat(auto-fit,minmax(135px,1fr))}.metric{padding:12px;min-height:83px}.metric strong{font-size:19px}#aiAssistant{max-height:85vh}.ai-launch{bottom:12px;right:12px}}
+@media(max-width:420px){.head-live{display:none}.profile-panel>.flex{display:block}.profile-panel label{margin:9px 0}.section-heading p{font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-wrap">
+    <div class="brand-icon">F<span>3</span></div>
+    <div class="brand-copy">
+      <div class="brand-eyebrow">NỀN TẢNG QUẢN TRỊ THÔNG MINH</div>
+      <h1>FLEX 3D <span>· SUNNY AI</span></h1>
+      <div class="brand-sub">Trung tâm điều hành sản xuất và kinh doanh</div>
+    </div>
+  </div>
+  <div class="head-right">
+    <span class="head-version">PHIÊN BẢN V44</span>
+    <span class="head-live"><i></i> Chế độ mô phỏng</span>
+  </div>
+</header>
+
+<main>
+  <div class="simulation-banner">DỮ LIỆU MÔ PHỎNG — Nhân sự, đơn hàng, lương, thưởng và sự cố là ví dụ để thử giao diện. Chưa kết nối hệ thống thực tế hoặc phê duyệt quy chế lương.</div>
+
+  <section class="panel profile-panel">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">KHÔNG GIAN LÀM VIỆC CÁ NHÂN</div>
+        <h2>Hồ sơ nhân viên &amp; thu nhập</h2>
+        <p>Chọn chức danh, theo dõi KPI và trao đổi trực tiếp với trợ lý AI.</p>
+      </div>
+      <div class="section-mark">01 / HỒ SƠ</div>
+    </div>
+    <div class="flex">
+      <label>Chọn nhân viên<select id="role"></select></label>
+      <label>KPI kết quả (%)<input id="score" max="200" min="0" type="number" value="100"/></label>
+      <label>Ngày công thực tế<input id="worked" max="31" min="0" type="number" value="26"/></label>
+    </div>
+    <div class="hero">
+      <div class="hero-eyebrow">TỔNG QUAN THU NHẬP CỦA BẠN</div>
+      <h2 id="hello">Xin chào!</h2>
+      <div class="small">THU NHẬP DỰ TÍNH CỦA BẠN – HIỂN THỊ NGAY KHI MỞ PHIẾU KPI</div>
+      <strong id="topSalary">0 đ</strong>
+      <p id="topSub"></p>
+      <span id="statusBadge"></span>
+    </div>
+  </section>
+
+  <div class="nav-heading"><span>ĐIỀU HƯỚNG HỆ THỐNG</span><span>Chọn trang để xem chi tiết</span></div>
+  <nav class="nav page-nav" id="pages"></nav>
+
+  <section class="panel period-panel">
+    <b>Kỳ báo cáo KPI và đơn hàng</b>
+    <div class="nav" id="periods"></div>
+    <p class="sub">KPI nhân sự đang là điểm mẫu theo tháng; dữ liệu đơn hàng có ngày để lọc thật theo kỳ. Không nhân số KPI tháng để giả làm kết quả quý/năm.</p>
+  </section>
+
+  <div class="content-area" id="content"></div>
+
+  <button class="ai-launch" id="aiLaunch" onclick="toggleAI()" type="button">🤖 Hỏi AI Agent</button>
+
+  <section aria-label="Trợ lý AI hỏi đáp" class="panel" id="aiAssistant">
+    <button aria-label="Đóng trợ lý" class="close-chat" onclick="toggleAI(false)" type="button">✕ Đóng</button>
+    <h2>🤖 AI Agent – Hỏi đáp nhân viên</h2>
+    <p class="sub">Trợ lý AI (APIVN nếu có key). Hỏi được về BẤT KỲ nhân sự nào (VD: "Kế toán lương bao nhiêu?"). Nếu không nhắc ai, AI trả lời cho người đang chọn.</p>
+    <div class="chips">
+      <button onclick="askPreset('Lương của tôi tính như thế nào?')">💰 Hỏi về lương</button>
+      <button onclick="askPreset('KPI của tôi có đạt không?')">📊 Hỏi KPI</button>
+      <button onclick="askPreset('Kế toán lương bao nhiêu?')">👤 Hỏi người khác</button>
+      <button onclick="askPreset('So sánh lương Kinh doanh 1 và CTV 7')">⚖️ So sánh</button>
+      <button onclick="askPreset('Tổng quỹ lương tháng này bao nhiêu?')">💵 Tổng quỹ lương</button>
+      <button onclick="askPreset('Ai có lương cao nhất công ty?')">🏆 Xếp hạng</button>
+    </div>
+    <div aria-live="polite" class="chatlog" id="chatlog" role="log"></div>
+    <div class="multi-tools">
+      <label class="media-button" for="aiPhoto">📷 Chụp ảnh / chọn ảnh</label>
+      <input accept="image/*" capture="environment" id="aiPhoto" style="display:none" type="file"/>
+      <button class="media-button" id="aiMic" type="button">🎙️ Nói câu hỏi</button>
+      <button aria-pressed="false" class="media-button" id="aiSpeak" type="button">🔊 Đọc câu trả lời: Tắt</button>
+    </div>
+    <div class="sub" id="aiMediaStatus" role="status">Ảnh chỉ xem trước trên máy. Micro và đọc tiếng nói tùy khả năng trình duyệt.</div>
+    <div class="ai-preview" hidden="" id="aiPreview">
+      <img alt="Ảnh nhân viên vừa chọn" id="aiPreviewImg"/>
+      <div><span id="aiPreviewName"></span><button id="aiRemovePhoto" type="button">Xóa ảnh</button></div>
+    </div>
+    <form class="chatrow" id="chatForm">
+      <input aria-label="Câu hỏi cho AI Agent" autocomplete="off" id="chatInput" maxlength="600" placeholder="Hỏi về lương, KPI, bất kỳ nhân sự nào..."/>
+      <button class="action" type="submit">Gửi hỏi</button>
+    </form>
+    <p class="sub">Mọi trả lời là hướng dẫn tham khảo. AI không tự duyệt lương, phạt, đơn hàng, quyết định an toàn.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Nguyên tắc quản trị tích hợp</h2>
+    <p><b>1. Tư duy nguyên bản:</b> truy từ kết quả kinh doanh về dữ liệu gốc. <b>2. Toyota:</b> loại bỏ lãng phí và lỗi. <b>3. Lý thuyết điểm nghẽn:</b> ưu tiên công đoạn giới hạn kết quả. <b>4. Deming:</b> lập kế hoạch, làm, kiểm tra, cải tiến. <b>5. Quản trị theo kết quả:</b> có người chịu trách nhiệm và bằng chứng.</p>
+    <p><b>Quy tắc lương mô phỏng:</b> KPI dưới 80% không có thưởng; 80–99% thưởng tỷ lệ; 100–110% đủ thưởng; trên 110% thêm 2% quỹ thưởng cho mỗi điểm vượt 110%, trần thêm 50%. Lương cứng và thưởng KPI mẫu được quy đổi theo tối đa 26 ngày công tiêu chuẩn; không cắt lương cứng do KPI thấp.</p>
+  </section>
+</main>
+
+<script>
+/* ============================================================
+   DỮ LIỆU – 22 NHÂN SỰ + 1500 ĐƠN (seed cố định) + 3 SỰ CỐ
+   ============================================================ */
+const D = {
+  people: [
+    {ten:"Giám đốc",bo_phan:"Điều hành",kpi_hoat_dong:108,kpi_ket_qua:97,muc_tieu:100,mau:"VÀNG",ket_luan:"Hoạt động đạt nhưng kết quả chưa đạt",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV001",base:25000000,bonus:8000000,task:"Điều hành lợi nhuận, dòng tiền, điểm nghẽn, an toàn và giảm 3% chi phí quản trị mỗi tháng",days:26,worked:26,hours:8,score:97,commissionRate:0},
+    {ten:"Kế toán",bo_phan:"Tài chính",kpi_hoat_dong:91,kpi_ket_qua:104,muc_tieu:100,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV002",base:10000000,bonus:2500000,task:"Đối soát công nợ, chứng từ, dòng tiền, chi phí và lương nháp",days:26,worked:26,hours:8,score:104,commissionRate:0},
+    {ten:"Tổ trưởng kiêm KCS",bo_phan:"Sản xuất",kpi_hoat_dong:72,kpi_ket_qua:65,muc_tieu:100,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV003",base:12000000,bonus:3500000,task:"Điều hành ca, phân công 5 công nhân, kiểm soát chất lượng, xác nhận sản lượng đạt và an toàn",days:26,worked:26,hours:8,score:65,commissionRate:0},
+    {ten:"Công nhân 1",bo_phan:"Sản xuất",kpi_hoat_dong:114,kpi_ket_qua:106,muc_tieu:100,mau:"XANH",ket_luan:"Đạt kết quả",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV004",base:8500000,bonus:2000000,task:"Vận hành công đoạn, ghi số liệu, báo lỗi, tuân thủ an toàn, bàn giao ca",days:26,worked:26,hours:8,score:106,commissionRate:0},
+    {ten:"Công nhân 2",bo_phan:"Sản xuất",kpi_hoat_dong:88,kpi_ket_qua:79,muc_tieu:100,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV005",base:8500000,bonus:2000000,task:"Vận hành công đoạn, ghi số liệu, báo lỗi, tuân thủ an toàn, bàn giao ca",days:26,worked:26,hours:8,score:79,commissionRate:0},
+    {ten:"Công nhân 3",bo_phan:"Sản xuất",kpi_hoat_dong:103,kpi_ket_qua:99,muc_tieu:100,mau:"VÀNG",ket_luan:"Hoạt động đạt nhưng kết quả chưa đạt",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV006",base:8500000,bonus:2000000,task:"Vận hành công đoạn, ghi số liệu, báo lỗi, tuân thủ an toàn, bàn giao ca",days:26,worked:26,hours:8,score:99,commissionRate:0},
+    {ten:"Công nhân 4",bo_phan:"Sản xuất",kpi_hoat_dong:79,kpi_ket_qua:70,muc_tieu:100,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV007",base:8500000,bonus:2000000,task:"Vận hành công đoạn, ghi số liệu, báo lỗi, tuân thủ an toàn, bàn giao ca",days:26,worked:26,hours:8,score:70,commissionRate:0},
+    {ten:"Công nhân 5",bo_phan:"Sản xuất",kpi_hoat_dong:96,kpi_ket_qua:94,muc_tieu:100,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV008",base:8500000,bonus:2000000,task:"Vận hành công đoạn, ghi số liệu, báo lỗi, tuân thủ an toàn, bàn giao ca",days:26,worked:26,hours:8,score:94,commissionRate:0},
+    {ten:"Kinh doanh 1",bo_phan:"Kinh doanh",kpi_hoat_dong:110,kpi_ket_qua:93,muc_tieu:100,mau:"VÀNG",ket_luan:"Hoạt động đạt nhưng kết quả chưa đạt",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV009",base:10000000,bonus:4000000,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:93,commissionRate:0.005},
+    {ten:"Kinh doanh 2",bo_phan:"Kinh doanh",kpi_hoat_dong:84,kpi_ket_qua:74,muc_tieu:100,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV010",base:10000000,bonus:4000000,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:74,commissionRate:0.005},
+    {ten:"Kinh doanh 3",bo_phan:"Kinh doanh",kpi_hoat_dong:67,kpi_ket_qua:58,muc_tieu:100,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV011",base:10000000,bonus:4000000,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:58,commissionRate:0.005},
+    {ten:"Kinh doanh 4",bo_phan:"Kinh doanh",kpi_hoat_dong:101,kpi_ket_qua:102,muc_tieu:100,mau:"XANH",ket_luan:"Đạt kết quả",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV012",base:10000000,bonus:4000000,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:102,commissionRate:0.005},
+    {ten:"Nội dung TikTok/Facebook/Zalo",bo_phan:"Truyền thông",kpi_hoat_dong:95,kpi_ket_qua:89,muc_tieu:100,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV013",base:9000000,bonus:3500000,task:"Sản xuất nội dung, tiếp nhận khách, chuyển đổi đơn và đo doanh thu",days:26,worked:26,hours:8,score:89,commissionRate:0},
+    {ten:"CTV 1",bo_phan:"Cộng tác viên",kpi_hoat_dong:76,kpi_ket_qua:61,muc_tieu:60,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV014",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:61,commissionRate:0.015},
+    {ten:"CTV 2",bo_phan:"Cộng tác viên",kpi_hoat_dong:109,kpi_ket_qua:107,muc_tieu:60,mau:"XANH",ket_luan:"Đạt kết quả",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV015",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:107,commissionRate:0.015},
+    {ten:"CTV 3",bo_phan:"Cộng tác viên",kpi_hoat_dong:82,kpi_ket_qua:77,muc_tieu:60,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV016",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:77,commissionRate:0.015},
+    {ten:"CTV 4",bo_phan:"Cộng tác viên",kpi_hoat_dong:92,kpi_ket_qua:83,muc_tieu:60,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV017",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:83,commissionRate:0.015},
+    {ten:"CTV 5",bo_phan:"Cộng tác viên",kpi_hoat_dong:105,kpi_ket_qua:101,muc_tieu:60,mau:"XANH",ket_luan:"Đạt kết quả",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV018",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:101,commissionRate:0.015},
+    {ten:"CTV 6",bo_phan:"Cộng tác viên",kpi_hoat_dong:64,kpi_ket_qua:53,muc_tieu:60,mau:"ĐỎ",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV019",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:53,commissionRate:0.015},
+    {ten:"CTV 7",bo_phan:"Cộng tác viên",kpi_hoat_dong:115,kpi_ket_qua:111,muc_tieu:60,mau:"XANH",ket_luan:"Đạt kết quả",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV020",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:111,commissionRate:0.015},
+    {ten:"CTV 8",bo_phan:"Cộng tác viên",kpi_hoat_dong:86,kpi_ket_qua:81,muc_tieu:60,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV021",base:0,bonus:0,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:81,commissionRate:0.015},
+    {ten:"Quản lý vùng",bo_phan:"Kinh doanh",kpi_hoat_dong:97,kpi_ket_qua:90,muc_tieu:100,mau:"VÀNG",ket_luan:"Cần xử lý điểm nghẽn",hanh_dong:"Xác minh chứng cứ, truy nguyên nguyên nhân, giao khắc phục và đo lại",id:"NV022",base:15000000,bonus:5000000,task:"Chăm sóc khách, báo giá, tạo đơn, theo dõi giao hàng và thu tiền",days:26,worked:26,hours:8,score:90,commissionRate:0.005}
+  ],
+  orders: [],
+  issues: [
+    {ma:"SC001",loai:"Tổn thất thực tế giả lập",bo_phan:"Sản xuất",van_de:"500 m² lỗi; thu hồi vật tư 2,5 triệu",so_tien:20000000,cach_tinh:"500 × 45.000 − 2.500.000",giai_phap:"Cách ly lô, kiểm tra trộn và kim châm, thử mẫu, QC xác nhận",chu_tri:"Tổ trưởng kiêm KCS",mau:"ĐỎ"},
+    {ma:"SC002",loai:"Chi phí thực tế giả lập",bo_phan:"Giao hàng",van_de:"18 đơn chậm giao, phát sinh điều xe",so_tien:4200000,cach_tinh:"Chi phí phát sinh giả định theo chứng từ mô phỏng",giai_phap:"Ghép tuyến, xác nhận lịch giao, kiểm tra tiền thu",chu_tri:"Kinh doanh 1",mau:"ĐỎ"},
+    {ma:"SC003",loai:"Nguy cơ, chưa phải tổn thất",bo_phan:"Sản xuất",van_de:"Trộn 180 m²/giờ, công đoạn sau 250 m²/giờ",so_tien:null,cach_tinh:"70 m²/giờ là chênh lệch năng lực, không quy đổi thành lỗ",giai_phap:"Đo thời gian chu kỳ, giảm chờ cấp liệu, kiểm chứng sản lượng bán được",chu_tri:"Tổ trưởng kiêm KCS",mau:"VÀNG"}
+  ],
+  demo: true
+};
+
+/* Sinh 1500 đơn với seed cố định – mỗi lần mở cho ra cùng data */
+(function generateOrders(){
+  const statuses = ["Đã thu tiền","Đã thu tiền","Đã thu tiền","Chờ giao","Đã thu tiền","QC giữ","Đã thu tiền","Đã thu tiền","Đã giao/chưa thu","Đã thu tiền","Đã thu tiền","Chờ giao","Đã thu tiền","QC giữ","Đã thu tiền","Đã thu tiền","Đã giao/chưa thu","Đã thu tiền","Đã thu tiền","Hủy","Đã thu tiền","Đã thu tiền"];
+  const reps = ["Kinh doanh 1","Kinh doanh 2","Kinh doanh 3","Kinh doanh 4","CTV 1","CTV 2","CTV 3","CTV 4","CTV 5","CTV 6","CTV 7","CTV 8"];
+  const m2List = [50,100,200,300,500];
+  const priceList = [68000,75000,86000,92000,100000];
+  let seed = 20261022;
+  const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const pick = arr => arr[Math.floor(rand() * arr.length)];
+  for (let i = 1; i <= 1500; i++){
+    const day = ((i - 1) % 22) + 1;
+    const date = '2026-10-' + String(day).padStart(2, '0');
+    const m2 = pick(m2List);
+    const dg = pick(priceList);
+    const gia_tri = m2 * dg;
+    const status = pick(statuses);
+    const paid = status === 'Đã thu tiền' ? gia_tri : 0;
+    const cost = status === 'Hủy' ? 0 : Math.round(gia_tri * 0.62);
+    const pt = pick(reps);
+    D.orders.push({
+      id: 'DH' + String(i).padStart(4, '0'),
+      khach: 'Khách ' + String(i).padStart(4, '0'),
+      phu_trach: pt,
+      m2, don_gia: dg, gia_tri,
+      trang_thai: status,
+      date,
+      collector: pt,
+      paid, cost,
+      evidence: 'Mô phỏng, chưa có chứng từ thực'
+    });
+  }
+})();
+
+/* ============================================================
+   HÀM TIỆN ÍCH + TÍNH LƯƠNG
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString('vi-VN') + ' đ';
+const badge = status => `<span class="badge ${status==='XANH'?'green':status==='VÀNG'?'yellow':status==='ĐỎ'?'red':'gray'}">${status}</span>`;
+
+let person = 0, period = 'month', page = 'profile';
+const PERIODS = [['day','Ngày'],['week','Tuần'],['month','Tháng'],['quarter','Quý'],['year','Năm']];
+const today = '2026-10-22';
+const roleSelect = $('role');
+roleSelect.innerHTML = D.people.map((p, i) => `<option value="${i}">${p.id} · ${p.ten}</option>`).join('');
+
+function bonus(p, score){
+  if (score < 80) return 0;
+  if (score < 100) return p.bonus * score / 100;
+  if (score <= 110) return p.bonus;
+  return p.bonus * (1 + Math.min((score - 110) * .02, .5));
+}
+function inPeriod(date, per){
+  if (per === 'day') return date === today;
+  if (per === 'week') return date >= '2026-10-19' && date <= today;
+  if (per === 'month') return date.slice(0, 7) === '2026-10';
+  if (per === 'quarter') return date >= '2026-10-01' && date <= today;
+  return date.slice(0, 4) === '2026';
+}
+function scoped(){ return D.orders.filter(o => inPeriod(o.date, period)); }
+function commission(p){
+  if (!p.commissionRate) return 0;
+  return scoped().filter(o => o.collector === p.ten).reduce((a, o) => a + o.paid * p.commissionRate, 0);
+}
+function salary(p, score, worked){
+  const attendance = Math.max(0, Math.min(worked, 26)) / 26;
+  const fixed = p.base * attendance;
+  const b = bonus(p, score) * attendance;
+  const c = commission(p);
+  return { fixed, bonus: b, commission: c, total: fixed + b + c };
+}
+
+/* ============================================================
+   CÁC TRANG
+   ============================================================ */
+function header(){
+  const p = D.people[person];
+  const s = salary(p, Number($('score').value), Number($('worked').value));
+  $('hello').textContent = `Xin chào, ${p.ten}!`;
+  $('topSalary').textContent = fmt(s.total);
+  $('topSub').textContent = `Thu nhập dự tính tháng · Lương cứng ${fmt(s.fixed)} + KPI ${fmt(s.bonus)} + hoa hồng theo tiền đã thu ${fmt(s.commission)} · Chưa khấu trừ`;
+  $('statusBadge').innerHTML = badge(p.mau);
+}
+
+function profile(){
+  const p = D.people[person];
+  const score = Number($('score').value);
+  const worked = Number($('worked').value);
+  const s = salary(p, score, worked);
+  const vals = [
+    ['Phút', s.total / (26 * 8 * 60)],
+    ['Giờ', s.total / (26 * 8)],
+    ['Ngày', s.total / 26],
+    ['Tuần', s.total * 12 / 52],
+    ['Tháng', s.total],
+    ['Quý', s.total * 3],
+    ['Năm', s.total * 12]
+  ];
+  const status = score >= 100 ? 'XANH' : score >= 80 ? 'VÀNG' : 'ĐỎ';
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Hồ sơ · ${p.id} · ${p.ten}</h2>
+      <p>${p.bo_phan} · ${badge(status)} · KPI kết quả ${score}% · KPI hoạt động ${p.kpi_hoat_dong}%</p>
+      <div class="grid">
+        <div class="metric"><small>Lương cứng hợp đồng</small><strong>${fmt(p.base)}</strong></div>
+        <div class="metric"><small>Quỹ thưởng KPI chuẩn</small><strong>${fmt(p.bonus)}</strong></div>
+        <div class="metric"><small>Lương cứng theo công</small><strong>${fmt(s.fixed)}</strong></div>
+        <div class="metric"><small>Thưởng KPI thực tính</small><strong>${fmt(s.bonus)}</strong></div>
+        <div class="metric"><small>Thưởng vượt KPI</small><strong>${fmt(Math.max(0, s.bonus - p.bonus))}</strong></div>
+        <div class="metric"><small>Hoa hồng dự tính</small><strong>${fmt(s.commission)}</strong></div>
+      </div>
+      <h3>Quy đổi thu nhập theo thời gian</h3>
+      <div class="grid">${vals.map(v => `<div class="metric"><small>${v[0]}</small><strong>${fmt(v[1])}</strong></div>`).join('')}</div>
+      <p class="sub">Phút/giờ/ngày/tuần/quý/năm là quy đổi từ tháng mô phỏng.</p>
+    </section>
+    <section class="panel">
+      <h2>Chức năng, nhiệm vụ và AI hướng dẫn</h2>
+      <p><b>Mục tiêu:</b> ${p.task}</p>
+      <p><b>AI nhận xét:</b> ${p.ket_luan}</p>
+      <p><b>Hành động:</b> ${p.hanh_dong}</p>
+      <p class="warning"><b>Cảnh báo:</b> KPI hoạt động cao nhưng KPI kết quả thấp không được tự động xếp loại đạt. Không cắt lương cứng do KPI thấp.</p>
+    </section>
+    <section class="panel">
+      <h2>Thử ba tình huống thu nhập</h2>
+      <div class="grid">${[75,100,120].map(sc => {
+        const z = salary(p, sc, 26);
+        return `<div class="metric"><small>KPI ${sc}% · ${badge(sc >= 100 ? 'XANH' : 'ĐỎ')}</small><strong>${fmt(z.total)}</strong><small>Cứng ${fmt(z.fixed)} · Thưởng ${fmt(z.bonus)} · Hoa hồng ${fmt(z.commission)}</small></div>`;
+      }).join('')}</div>
+    </section>`;
+}
+
+function dashboard(){
+  const a = scoped();
+  const paid = a.reduce((x, o) => x + o.paid, 0);
+  const value = a.reduce((x, o) => x + o.gia_tri, 0);
+  const counts = {};
+  a.forEach(o => counts[o.trang_thai] = (counts[o.trang_thai] || 0) + 1);
+  const monthly = D.people.reduce((x, p) => x + salary(p, p.score, 26).total, 0);
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Báo cáo giám đốc · ${PERIODS.find(x => x[0] === period)[1]}</h2>
+      <div class="grid">
+        <div class="metric"><small>Đơn hàng trong kỳ</small><strong>${a.length}</strong></div>
+        <div class="metric"><small>Giá trị đơn hàng</small><strong>${fmt(value)}</strong></div>
+        <div class="metric"><small>Tiền đã thu (mô phỏng)</small><strong>${fmt(paid)}</strong></div>
+        <div class="metric"><small>Chi phí sự cố giả lập</small><strong>${fmt(24200000)}</strong></div>
+        <div class="metric"><small>Quỹ lương dự tính tháng</small><strong>${fmt(monthly)}</strong></div>
+        <div class="metric"><small>Nhân sự mô phỏng</small><strong>${D.people.length}</strong></div>
+      </div>
+      <p class="warning">Chỉ tiêu giám đốc giảm 3% chi phí quản trị/tháng: chưa có số liệu kỳ gốc nên KHÔNG xác nhận đạt.</p>
+      <h3>Phân loại KPI nhân viên</h3>
+      <div class="grid">${['XANH','VÀNG','ĐỎ'].map(st => `<div class="metric"><small>${badge(st)}</small><strong>${D.people.filter(p => p.mau === st).length} người</strong></div>`).join('')}</div>
+    </section>`;
+}
+
+function staff(){
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Tổng hợp hồ sơ và lương tất cả nhân viên</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Mã</th><th>Chức danh</th><th>Lương cứng</th><th>Quỹ KPI</th><th>KPI kết quả</th><th>Thu nhập tháng</th><th>Trạng thái</th></tr></thead>
+          <tbody>${D.people.map((x, i) => `<tr><td>${x.id}</td><td><button class="action" onclick="pick(${i})">${x.ten}</button></td><td>${fmt(x.base)}</td><td>${fmt(x.bonus)}</td><td>${x.score}%</td><td>${fmt(salary(x, x.score, 26).total)}</td><td>${badge(x.mau)}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </section>`;
+}
+
+function orders(){
+  const a = scoped();
+  const counts = {};
+  a.forEach(o => counts[o.trang_thai] = (counts[o.trang_thai] || 0) + 1);
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Đơn hàng · ${a.length} đơn trong kỳ</h2>
+      <div class="grid">${Object.entries(counts).map(([k, v]) => `<div class="metric"><small>${k}</small><strong>${v}</strong></div>`).join('')}</div>
+      <label>Lọc trạng thái <select id="orderStatus"><option value="">Tất cả</option>${Object.keys(counts).map(k => `<option>${k}</option>`).join('')}</select></label>
+      <label>Mã đơn <input id="orderQuery" placeholder="VD: DH0001"></label>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Mã</th><th>Ngày</th><th>Phụ trách</th><th>m²</th><th>Giá trị</th><th>Đã thu</th><th>Trạng thái</th></tr></thead>
+          <tbody id="orderRows"></tbody>
+        </table>
+      </div>
+      <p class="sub" id="orderCount"></p>
+    </section>`;
+  $('orderStatus').onchange = drawOrders;
+  $('orderQuery').oninput = drawOrders;
+  drawOrders();
+}
+
+function drawOrders(){
+  const a = scoped().filter(o => (! $('orderStatus').value || o.trang_thai === $('orderStatus').value) && o.id.toLowerCase().includes($('orderQuery').value.toLowerCase()));
+  $('orderCount').textContent = `Hiển thị ${Math.min(100, a.length)}/${a.length} đơn khớp bộ lọc.`;
+  $('orderRows').innerHTML = a.slice(0, 100).map(o => `<tr><td>${o.id}</td><td>${o.date}</td><td>${o.phu_trach}</td><td>${o.m2}</td><td>${fmt(o.gia_tri)}</td><td>${fmt(o.paid)}</td><td>${o.trang_thai}</td></tr>`).join('');
+}
+
+function issues(){
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Sự cố và phương án khắc phục</h2>
+      ${D.issues.map(x => `<details open><summary>${badge(x.mau)} ${x.ma} · ${x.van_de}</summary>
+        <p><b>Thiệt hại:</b> ${x.so_tien === null ? 'Chưa đủ dữ liệu định lượng' : fmt(x.so_tien)} · ${x.loai}</p>
+        <p><b>Cách tính:</b> ${x.cach_tinh}</p>
+        <p><b>Chủ trì:</b> ${x.chu_tri}</p>
+        <p><b>Hành động:</b> ${x.giai_phap}</p>
+      </details>`).join('')}
+    </section>`;
+}
+
+function guide(){
+  const p = D.people[person];
+  const production = p.bo_phan === 'Sản xuất';
+  const sales = /Kinh doanh|Cộng tác viên|Truyền thông/.test(p.bo_phan);
+  let tasks;
+  if (production){
+    tasks = p.ten === 'Tổ trưởng kiêm KCS'
+      ? ['Kiểm tra an toàn và giao việc cho đúng 5 công nhân','Kiểm tra vật tư, độ ẩm cát, định lượng và máy','Lấy mẫu, xác nhận chất lượng từng lô','Đối chiếu sản lượng đạt QC, hao hụt và thời gian dừng','Giao ca, ký xác nhận và báo cáo nguyên nhân']
+      : ['Nhận việc từ tổ trưởng kiêm KCS, kiểm tra bảo hộ','Kiểm tra máy và vật tư trước khi vận hành','Thực hiện đúng công đoạn, ghi lượng đạt và lượng lỗi','Báo bất thường, cách ly hàng nghi lỗi','Vệ sinh, bàn giao, nộp bằng chứng'];
+  } else if (sales){
+    tasks = ['Nhận danh sách khách hàng và mục tiêu ngày','Liên hệ, ghi kết quả và bằng chứng','Tư vấn, báo giá đúng chính sách','Theo dõi đơn đã giao, tiền đã thu, công nợ','Báo cáo tỷ lệ chuyển đổi, giá trị thực'];
+  } else if (p.ten === 'Kế toán'){
+    tasks = ['Kiểm tra chứng từ và đối chiếu ngân hàng','Đối soát đơn đã giao, hóa đơn và tiền thu','Cập nhật công nợ, chi phí','Lập bảng lương nháp, kiểm tra KPI','Báo cáo sai lệch, trình người có thẩm quyền'];
+  } else {
+    tasks = ['Đọc bảng điều hành doanh thu, tiền thu','Xác định 3 điểm nghẽn lớn nhất','Xem hồ sơ sự cố, người phụ trách','Kiểm tra kế hoạch giảm 3% chi phí','Duyệt biện pháp, giám sát chất lượng'];
+  }
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Hướng dẫn công việc · ${p.ten}</h2>
+      <p><b>Mục tiêu:</b> ${p.task}</p>
+      <p class="sub">Chỉ công việc có bằng chứng và người quản lý xác nhận mới được tính hoàn thành.</p>
+      <ol class="steps">${tasks.map(t => `<li>${t}</li>`).join('')}</ol>
+      <div class="cardline"><b>Nguyên tắc quyền hạn</b><p>Không tự ý sửa dữ liệu đã khóa, duyệt lương, phạt, xuất kho hoặc nghiệm thu chất lượng.</p></div>
+      <button class="action" onclick="toggleAI(true)">🤖 Hỏi AI về nhiệm vụ</button>
+    </section>`;
+}
+
+function report(){
+  const p = D.people[person];
+  const sc = Number($('score').value);
+  const worked = Number($('worked').value);
+  const pay = salary(p, sc, worked);
+  const cl = sc >= 100 ? 'XANH' : sc >= 80 ? 'VÀNG' : 'ĐỎ';
+  const periods = ['Ngày','Tuần','Tháng','Quý','Năm'];
+  $('content').innerHTML = `
+    <section class="panel">
+      <h2>Phiếu KPI cá nhân · ${p.ten}</h2>
+      <p><b>Mã:</b> ${p.id} · <b>Bộ phận:</b> ${p.bo_phan} · <b>Đánh giá:</b> ${badge(cl)}</p>
+      <div class="hero"><div>Thu nhập tháng dự tính</div><strong>${fmt(pay.total)}</strong><p>Lương cứng ${fmt(pay.fixed)} + thưởng KPI ${fmt(pay.bonus)} + hoa hồng ${fmt(pay.commission)}</p></div>
+      <h3>Đối chiếu KPI và kết quả</h3>
+      <div class="grid">
+        <div class="metric"><small>KPI hoạt động</small><strong>${p.kpi_hoat_dong}%</strong></div>
+        <div class="metric"><small>KPI kết quả</small><strong>${sc}%</strong></div>
+        <div class="metric"><small>Ngày công</small><strong>${worked}/26</strong></div>
+        <div class="metric"><small>Tình trạng</small><strong>${badge(cl)}</strong></div>
+      </div>
+      <div class="cardline"><b>Phân tích AI:</b><p>${p.ket_luan}</p><b>Hành động:</b><p>${p.hanh_dong}</p></div>
+      <h3>Báo cáo 5 kỳ</h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Kỳ</th><th>KPI</th><th>Thu nhập</th><th>Bằng chứng</th></tr></thead>
+          <tbody>${periods.map((x, i) => `<tr><td>${x}</td><td>${i === 2 ? sc + '%' : 'Chưa có dữ liệu'}</td><td>${i === 2 ? fmt(pay.total) : 'Chưa quyết toán'}</td><td>${i === 2 ? 'Giả lập, chưa xác minh' : 'Chưa có dữ liệu gốc'}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+      <button class="action" onclick="toggleAI(true)">🤖 Hỏi AI về KPI</button>
+    </section>`;
+}
+
+function render(){
+  header();
+  $('periods').innerHTML = PERIODS.map(([v, l]) => `<button class="${period === v ? 'active' : ''}" onclick="setPeriod('${v}')">${l}</button>`).join('');
+  $('pages').innerHTML = [
+    ['profile','Hồ sơ & lương'],
+    ['staff','Toàn bộ nhân sự'],
+    ['dashboard','Giám đốc'],
+    ['orders','Đơn hàng'],
+    ['issues','Sự cố'],
+    ['guide','Hướng dẫn'],
+    ['report','Báo cáo KPI']
+  ].map(([v, l]) => `<button class="${page === v ? 'active' : ''}" onclick="setPage('${v}')">${l}</button>`).join('');
+  ({ profile, staff, dashboard, orders, issues, guide, report }[page])();
+}
+
+function pick(i){
+  person = i;
+  roleSelect.value = i;
+  $('score').value = D.people[i].score;
+  $('worked').value = 26;
+  page = 'profile';
+  render();
+  if (document.getElementById('chatlog')) resetChat();
+}
+function setPage(v){ page = v; render(); }
+function setPeriod(v){ period = v; render(); }
+
+roleSelect.onchange = e => pick(Number(e.target.value));
+$('score').oninput = render;
+$('worked').oninput = render;
+
+function toggleAI(force){
+  const el = $('aiAssistant');
+  const open = typeof force === 'boolean' ? force : !el.classList.contains('open');
+  el.classList.toggle('open', open);
+  $('aiLaunch').textContent = open ? '✕ Đóng AI' : '🤖 Hỏi AI Agent';
+  if (open) $('chatInput').focus();
+}
+
+/* ============================================================
+   AI – APIVN với bối cảnh TOÀN BỘ 22 nhân sự
+   ============================================================ */
+const AI_CONFIG = {
+  apiKey: 'sk-Ysc3u9GN61OHps0CYKvrivM7sQ7GSNvGXtfClbH6a90AIBMa',   // <-- DÁN KEY APIVN VÀO ĐÂY
+  apiUrl: 'https://apivn.vn/v1/chat/completions',
+  model:  'gpt-5.6-luna',
+  timeout: 60000
+};
+window.__AI_CONFIG = AI_CONFIG;
+window.__aiReady = function(){
+  return AI_CONFIG.apiKey && !AI_CONFIG.apiKey.includes('xxxxxxxx');
+};
+
+/* Tìm nhân viên được nhắc trong câu hỏi (dùng cho offline) */
+function findPersonInQuestion(q){
+  const lowerQ = q.toLowerCase();
+  for (const pp of D.people){
+    if (lowerQ.includes(pp.ten.toLowerCase())) return pp;
+    if (lowerQ.includes(pp.id.toLowerCase())) return pp;
+  }
+  return null;
+}
+
+/* Bối cảnh cho AI – gồm DANH SÁCH ĐẦY ĐỦ 22 nhân sự */
+function buildContextForAI(){
+  const p = D.people[person];
+  const score = Number($('score').value);
+  const worked = Number($('worked').value);
+  const s = salary(p, score, worked);
+
+  const allPeople = D.people.map(x => {
+    const sx = salary(x, x.score, 26);
+    return `- ${x.id} · ${x.ten} (${x.bo_phan}): base ${fmt(x.base)}, bonus ${fmt(x.bonus)}, HH ${(x.commissionRate*100).toFixed(2)}%, KPI ${x.score}%, lương tháng ~${fmt(sx.total)}`;
+  }).join('\n');
+
+  const issuesText = D.issues.map(x =>
+    `- ${x.ma} [${x.mau}] ${x.bo_phan}: ${x.van_de} (thiệt hại ${x.so_tien === null ? 'chưa định lượng' : fmt(x.so_tien)})`
+  ).join('\n');
+
+  return `[BỐI CẢNH HỆ THỐNG SUNNY AI – FLEX 3D V44]
+
+Bạn là Trợ lý AI Agent của Công ty FLEX 3D. Trả lời tiếng Việt, ngắn gọn, thực tế, có số liệu cụ thể.
+Chỉ tư vấn – KHÔNG tự sửa dữ liệu, không tự duyệt lương/phạt/đơn hàng/quyết định an toàn.
+
+[NHÂN VIÊN ĐANG CHỌN TRONG GIAO DIỆN]
+- Mã: ${p.id} · Chức danh: ${p.ten} · Bộ phận: ${p.bo_phan}
+- Nhiệm vụ: ${p.task}
+- Đánh giá: ${p.ket_luan}
+- Hành động ưu tiên: ${p.hanh_dong}
+- KPI hoạt động: ${p.kpi_hoat_dong}% · KPI kết quả: ${score}%
+- Ngày công: ${worked}/26
+- Lương cứng HĐ: ${fmt(p.base)}/tháng
+- Quỹ thưởng KPI chuẩn: ${fmt(p.bonus)}
+- Tỷ lệ hoa hồng: ${(p.commissionRate * 100).toFixed(2)}%
+
+[TÍNH LƯƠNG HIỆN TẠI CỦA NGƯỜI ĐANG CHỌN]
+- Lương cứng theo công: ${fmt(s.fixed)}
+- Thưởng KPI thực: ${fmt(s.bonus)}
+- Hoa hồng: ${fmt(s.commission)}
+- TỔNG THU NHẬP: ${fmt(s.total)} (chưa khấu trừ)
+- Quy đổi/giờ: ${fmt(s.total/(26*8))} · /ngày: ${fmt(s.total/26)} · /quý: ${fmt(s.total*3)} · /năm: ${fmt(s.total*12)}
+
+[DANH SÁCH TOÀN BỘ 22 NHÂN SỰ – TRA CỨU KHI HỎI VỀ NGƯỜI KHÁC]
+${allPeople}
+
+[QUY TẮC THƯỞNG KPI]
+- <80%: 0
+- 80–99%: quỹ × KPI/100
+- 100–110%: đủ quỹ
+- >110%: quỹ × (1 + min((KPI-110)×2%, 50%))
+- Không cắt lương cứng vì KPI thấp
+
+[CÁCH TÍNH LƯƠNG]
+- Lương cứng = base × (ngày công / 26)
+- Thưởng thực = thưởng KPI × (ngày công / 26)
+- Hoa hồng = Σ(paid × commissionRate) các đơn nhân viên thu trong kỳ
+- Tổng = lương cứng + thưởng + hoa hồng
+
+[SỰ CỐ ĐANG MỞ]
+${issuesText}
+
+[HƯỚNG DẪN QUAN TRỌNG]
+1. Nếu câu hỏi nhắc TÊN hoặc MÃ cụ thể (VD "Kế toán", "NV002", "Kinh doanh 1", "CTV 7") → tra trong DANH SÁCH TOÀN BỘ NHÂN SỰ và trả lời theo data người đó.
+2. Nếu câu hỏi KHÔNG nhắc ai (VD "lương tôi bao nhiêu", "KPI có đạt không") → trả lời cho NGƯỜI ĐANG CHỌN.
+3. Nếu hỏi tổng quỹ lương, so sánh nhiều người, xếp hạng → dùng danh sách trên.
+4. Trích đúng số liệu trên, không bịa.
+5. Câu hỏi ngoài phạm vi → đề nghị chuyển quản lý phụ trách.
+6. Không khẳng định đã duyệt/chi tiền/phạt khi chưa xác nhận.
+7. Khi hỏi lương/KPI → trình bày rõ phép tính.`;
+}
+
+async function callAPIVN(question){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), AI_CONFIG.timeout);
+  try {
+    const resp = await fetch(AI_CONFIG.apiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + AI_CONFIG.apiKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: AI_CONFIG.model,
+        messages: [
+          { role: 'system', content: buildContextForAI() },
+          { role: 'user',   content: question }
+        ],
+        temperature: 0.5
+      }),
+      signal: ctrl.signal
+    });
+    if (!resp.ok){
+      const t = await resp.text().catch(() => '');
+      throw new Error(`API ${resp.status}: ${(t || resp.statusText).slice(0, 150)}`);
+    }
+    const data = await resp.json();
+    const ans = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    if (!ans || !ans.trim()) throw new Error('API trả về rỗng');
+    return ans.trim();
+  } catch(e){
+    if (e.name === 'AbortError') throw new Error('API timeout');
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* Chat UI */
+function addChat(sender, content){
+  const log = document.getElementById('chatlog');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (sender === 'Bạn' ? 'me' : 'ai');
+  div.textContent = (sender === 'Bạn' ? 'Bạn: ' : 'AI Agent: ') + content;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  if (sender === 'AI' && content && !content.startsWith('Xin chào!') && window.__voiceRead){
+    speakAnswer(content);
+  }
+}
+
+function resetChat(){
+  const log = document.getElementById('chatlog');
+  if (!log) return;
+  log.replaceChildren();
+  addChat('AI', 'Xin chào! Tôi là trợ lý AI.');
+}
+
+/* Fallback offline – hỗ trợ nhân viên được nhắc trong câu hỏi */
+function respondAI(q){
+  const mentioned = findPersonInQuestion(q);
+  const p = mentioned || D.people[person];
+  const score = mentioned ? p.score : Number($('score').value);
+  const worked = Number($('worked').value);
+  const s = salary(p, score, worked);
+  const t = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+  const prefix = mentioned ? `[Tra cứu: ${p.ten} – ${p.id}] ` : '';
+
+  if (/luong|thu nhap|tien|thuong|hoa hong|phut|gio|quy|nam/.test(t)){
+    return `${prefix}Hồ sơ ${p.id} – ${p.ten}:\n• Lương cứng HĐ: ${fmt(p.base)}/tháng\n• Theo ${worked}/26 ngày công: ${fmt(s.fixed)}\n• Thưởng KPI (${score}%): ${fmt(s.bonus)}\n• Hoa hồng: ${fmt(s.commission)}\n• TỔNG: ${fmt(s.total)} (chưa khấu trừ)\nQuy đổi: ${fmt(s.total/(26*8))}/giờ · ${fmt(s.total/26)}/ngày · ${fmt(s.total*3)}/quý · ${fmt(s.total*12)}/năm.\nĐây là số mô phỏng.`;
+  }
+  if (/kpi|chi tieu|khong dat|vuot|danh gia/.test(t)){
+    return `${prefix}KPI ${p.ten}: ${score}% (${score >= 100 ? 'đạt/vượt' : score >= 80 ? 'cảnh báo' : 'không đạt'}); KPI hoạt động mẫu ${p.kpi_hoat_dong}%. ${p.ket_luan}. Việc cần làm: ${p.hanh_dong}.`;
+  }
+  if (/viec|nhiem vu|huong dan|quy trinh|hom nay|lam gi/.test(t)){
+    return `${prefix}${p.ten} – ${p.bo_phan}. Nhiệm vụ trọng tâm: ${p.task}. Hôm nay: 1) kiểm tra việc; 2) thực hiện quy trình; 3) ghi bằng chứng; 4) báo vướng mắc; 5) bàn giao.`;
+  }
+  if (/loi|hong|su co|chat luong|an toan|dung may/.test(t)){
+    return `Khi có lỗi/sự cố: 1) ưu tiên an toàn; 2) cách ly sản phẩm nghi lỗi; 3) ghi mã lô/số lượng/thời điểm/hình ảnh; 4) báo tổ trưởng kiêm KCS; 5) chỉ tiếp tục khi được xác nhận.`;
+  }
+  if (/tang|cai thien|giam chi phi|nang suat/.test(t)){
+    return `${prefix}Muốn cải thiện thu nhập: tăng sản lượng nghiệm thu, giảm lỗi, đúng hạn, ghi bằng chứng. KPI ${score}% → quỹ thưởng chuẩn ${fmt(p.bonus)}.`;
+  }
+  if (mentioned){
+    return `${prefix}${p.ten} – ${p.bo_phan}\n• Lương cứng: ${fmt(p.base)}/tháng\n• Quỹ KPI: ${fmt(p.bonus)}\n• KPI: ${p.score}%\n• Hoa hồng: ${(p.commissionRate*100).toFixed(2)}%\n• Lương tháng dự tính: ${fmt(s.total)}`;
+  }
+  return `Tôi đã nhận: "${q}". Bản ngoại tuyến chỉ hỗ trợ lương, KPI, nhiệm vụ, sự cố. Với vấn đề khác, hãy chuyển quản lý phụ trách.`;
+}
+
+function askPreset(q){
+  document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+function showTyping(){
+  const log = document.getElementById('chatlog');
+  const d = document.createElement('div');
+  d.className = 'msg ai';
+  d.id = 'aiTyping';
+  d.textContent = 'AI Agent: ⏳ Đang tính...';
+  log.appendChild(d);
+  log.scrollTop = log.scrollHeight;
+  return d;
+}
+function hideTyping(el){ el && el.parentNode && el.parentNode.removeChild(el); }
+
+async function sendChat(){
+  const inp = document.getElementById('chatInput');
+  const q = inp.value.trim();
+  if (!q) return;
+
+  addChat('Bạn', q);
+  inp.value = '';
+  inp.focus();
+
+  const typing = showTyping();
+  let answer;
+  if (window.__aiReady()){
+    try {
+      answer = await callAPIVN(q);
+    } catch(err){
+      console.warn('[APIVN]', err);
+      answer = respondAI(q);
+    }
+  } else {
+    answer = respondAI(q);
+  }
+  hideTyping(typing);
+  addChat('AI', answer);
+}
+
+document.getElementById('chatForm').addEventListener('submit', e => {
+  e.preventDefault();
+  sendChat();
+});
+
+/* Voice / Photo / Mic */
+let pendingPhoto = null;
+window.__voiceRead = false;
+const mediaStatus = document.getElementById('aiMediaStatus');
+function setMediaStatus(t){ mediaStatus.textContent = t; }
+function speakAnswer(t){
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t);
+  u.lang = 'vi-VN'; u.rate = 1;
+  window.speechSynthesis.speak(u);
+}
+document.getElementById('aiSpeak').addEventListener('click', () => {
+  window.__voiceRead = !window.__voiceRead;
+  document.getElementById('aiSpeak').textContent = '🔊 Đọc câu trả lời: ' + (window.__voiceRead ? 'Bật' : 'Tắt');
+  document.getElementById('aiSpeak').setAttribute('aria-pressed', String(window.__voiceRead));
+  if (!window.__voiceRead && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  setMediaStatus(window.__voiceRead ? 'Đã bật đọc câu trả lời.' : 'Đã tắt đọc câu trả lời.');
+});
+document.getElementById('aiPhoto').addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  if (!f.type.startsWith('image/')){ setMediaStatus('Tệp không phải ảnh.'); return; }
+  if (f.size > 8 * 1024 * 1024){ setMediaStatus('Ảnh > 8 MB.'); return; }
+  if (pendingPhoto && pendingPhoto.url) URL.revokeObjectURL(pendingPhoto.url);
+  pendingPhoto = { name: f.name, url: URL.createObjectURL(f) };
+  document.getElementById('aiPreviewImg').src = pendingPhoto.url;
+  document.getElementById('aiPreviewName').textContent = f.name;
+  document.getElementById('aiPreview').hidden = false;
+  setMediaStatus('Đã nhận ảnh (chỉ xem trước).');
+});
+document.getElementById('aiRemovePhoto').addEventListener('click', () => {
+  if (pendingPhoto) URL.revokeObjectURL(pendingPhoto.url);
+  pendingPhoto = null;
+  document.getElementById('aiPhoto').value = '';
+  document.getElementById('aiPreview').hidden = true;
+  setMediaStatus('Đã xóa ảnh đính kèm.');
+});
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+document.getElementById('aiMic').addEventListener('click', () => {
+  if (!SR){ setMediaStatus('Trình duyệt không hỗ trợ micro. Dùng ô nhập chữ.'); return; }
+  try {
+    const rec = new SR();
+    rec.lang = 'vi-VN'; rec.interimResults = false; rec.maxAlternatives = 1;
+    rec.onresult = e => {
+      document.getElementById('chatInput').value = e.results[0][0].transcript;
+      setMediaStatus('Đã chuyển giọng nói thành chữ.');
+    };
+    rec.onerror = e => setMediaStatus('Lỗi micro: ' + e.error);
+    rec.onend = () => { document.getElementById('aiMic').textContent = '🎙️ Nói câu hỏi'; };
+    document.getElementById('aiMic').textContent = '🎙️ Đang nghe...';
+    rec.start();
+    setMediaStatus('Đang nghe...');
+  } catch(e){ setMediaStatus('Không bật được micro: ' + e.message); }
+});
+
+/* Khởi động */
+pick(0);
+resetChat();
+window.__FLEX3D_TEST__ = { D, bonus, salary, inPeriod, scoped, fmt };
+console.log('[SUNNY AI] APIVN:', window.__aiReady() ? 'đã cấu hình' : 'chưa có API key');
+</script>
+</body>
+</html>
